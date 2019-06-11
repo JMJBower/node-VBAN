@@ -25,9 +25,6 @@ function proccessHeader(headerBuffer) {
 
     headers["sr"] = SR[srIndex];
     headers["sp"] = (sp * 2) << 4;
-    if (headers["sp"] != 0) {
-        //throw new Error("Non audio packet");
-    }
 
     // Samples per frame (8 bits)
     headers["nbSample"] = headerBuffer.readUInt8(5) + 1;
@@ -38,6 +35,18 @@ function proccessHeader(headerBuffer) {
     // Data Format / Codec (3 + 1 + 4 bits)
     const dfcodec = headerBuffer.readUInt8(7);
     headers["formatIndex"] = dfcodec & 3; // 3 bits
+
+    headers["bitDepth"] =
+        [8, 16, 24, 32, 32, 64, 12, 10][headers.formatIndex];
+    headers["signed"] = [
+        false, true, true, true,
+        true, true, true, true
+    ][headers.formatIndex];
+    headers["float"] = [
+        false, false, false, false,
+        true, true, false, false
+    ][headers.formatIndex];
+
     // Ignore 1 bit
     headers["codec"] = (dfcodec >> 4) << 4; // 4 bits
 
