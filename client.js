@@ -4,6 +4,8 @@ const vban = require("./vban");
 
 const server = dgram.createSocket("udp4");
 
+let currentConfig = {};
+
 let speaker = null;
 
 server.on("error", (err) => {
@@ -13,8 +15,15 @@ server.on("error", (err) => {
 
 server.on("message", (msg, rinfo) => {
     const data = vban.proccessPacket(msg);
-    if (!speaker) {
+    let configMatch = true;
+    Object.keys(currentConfig).forEach((element) => {
+        if (element === "frameCounter") return;
+        configMatch = configMatch &&
+            currentConfig[element] === data.header[element];
+    });
+    if (!speaker || !configMatch) {
         speaker = new Speaker(headerToSpeakerConfig(data.header));
+        currentConfig = data.header;
     }
 
     // Check for audio frame

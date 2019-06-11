@@ -1,0 +1,16 @@
+{
+  "name": "vban",
+  "version": "1.0.0",
+  "description": "Node VBAN implementation",
+  "main": "client.js",
+  "dependencies": {
+    "speaker": "^0.4.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node client.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jacob Bower",
+  "license": "ISC"
+}
